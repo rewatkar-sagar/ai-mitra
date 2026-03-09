@@ -6,18 +6,15 @@ from risk_analyzer import calculate_risk
 app = Flask(__name__)
 CORS(app) # Enable Cross-Origin Resource Sharing
 
-@app.route('/api/analyze', methods=['POST'])
-
+# --- TEAM MEMBER ADDITION PRESERVED ---
 @app.route("/")
 def home():
     return "AI Mitra Backend Running"
-
 
 @app.route('/api/analyze', methods=['POST'])
 @app.route('/api/analyse', methods=['POST'])
 @app.route('/analyze', methods=['POST'])
 @app.route('/analyse', methods=['POST'])
-
 def analyze():
     """
     Main endpoint for AI Mitra. 
@@ -34,14 +31,16 @@ def analyze():
     if not user_message:
         return jsonify({'error': 'No message provided.'}), 400
 
-    score = analyze_text(user_text)
+    # FIXED: Changed 'user_text' to 'user_message' to match the variable above
+    score = analyze_text(user_message)
+    
+    # --- TEAM MEMBER ADDITION PRESERVED ---
     risk = calculate_risk(score)
 
     return jsonify({
         "score": score,
         "risk_level": risk
     })
-
 
 if __name__ == "__main__":
     app.run(debug=True)
