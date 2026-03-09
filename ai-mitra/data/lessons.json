@@ -1,0 +1,19 @@
+{
+  "lessons": [
+    {
+      "title": "What is AI Misinformation",
+      "description": "AI misinformation occurs when AI systems generate information that is incorrect, misleading, or presented as factual when it is not verified. Because AI models generate text based on patterns rather than true understanding, they may produce statements that sound convincing but are false.",
+      "example": "Example: An AI chatbot confidently claims that a certain medicine cures a disease without scientific proof. A user may believe this information and make unsafe decisions."
+    },
+    {
+      "title": "Why AI Hallucinations Happen",
+      "description": "AI hallucinations happen when an AI model generates information that looks realistic but is not based on real data. This occurs because the model predicts words based on probability rather than verifying facts.",
+      "example": "Example: When asked for a research paper citation, an AI may generate a fake author name, fake journal, and fake publication year that appear believable."
+    },
+    {
+      "title": "How to Verify AI Answers",
+      "description": "AI-generated answers should always be verified before trusting them. Users should check reliable sources, compare multiple websites, and confirm information from trusted organizations.",
+      "example": "Example: If AI gives financial advice, verify the information by checking official bank websites or trusted financial news platforms."
+    }
+  ]
+}
