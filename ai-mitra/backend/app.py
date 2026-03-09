@@ -1,25 +1,43 @@
 from flask import Flask, request, jsonify
 from supabase_client import supabase
 from ai_engine import analyze_text
+from flask_cors import CORS 
 from risk_analyzer import calculate_risk
 
 app = Flask(__name__)
-@app.route('/analyze', methods=['POST'])
+CORS(app) # Enable Cross-Origin Resource Sharing
+
+@app.route('/api/analyze', methods=['POST'])
 def analyze():
-
+    """
+    Main endpoint for AI Mitra. 
+    Receives user message from the frontend, analyzes it, and returns the risk assessment.
+    """
     data = request.json
-    user_text = data.get("text")
+    
+    # Handle both 'message' and 'text' keys just in case the frontend changes it
+    if not data:
+        return jsonify({'error': 'No data provided in the request body.'}), 400
+        
+    user_message = data.get('message') or data.get('text')
+    
+    if not user_message:
+        return jsonify({'error': 'No message provided.'}), 400
 
-    ai_result = analyze_text(user_text)
-    risk = calculate_risk(user_text)
+    # 1. Call the AI Engine (Ollama integration running on your RTX 4050)
+    ai_analysis = analyze_text(user_message)
 
-    supabase.table("user_results").insert({
-        "user_text": user_text,
-        "risk_level": risk
-    }).execute()
+    # 2. Call the Rule-based Risk Analyzer (Member 4's component)
+    rule_analysis = calculate_risk(user_message)
+    
+    # Merge the results
+    ai_analysis["rule_based_risk"] = rule_analysis.get("rule_based_risk", "Pending")
 
-    return jsonify({
-        "risk_level": risk,
-        "explanation": ai_result["explanation"],
-        "verification_tip": ai_result["verification_tip"]
-    })
+    # 3. Return the JSON response to the frontend
+    return jsonify(ai_analysis)
+
+if __name__ == '__main__':
+    # Run the Flask app on port 5000
+    print("Starting AI Mitra Backend Server...")
+    print("Ensure Ollama is running in the background!")
+    app.run(debug=True, port=5000)
