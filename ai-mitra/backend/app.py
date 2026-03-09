@@ -13,7 +13,10 @@ def home():
     return "AI Mitra Backend Running"
 
 
-@app.route("/analyze", methods=["POST"])
+@app.route('/api/analyze', methods=['POST'])
+@app.route('/api/analyse', methods=['POST'])
+@app.route('/analyze', methods=['POST'])
+@app.route('/analyse', methods=['POST'])
 
 def analyze():
     """
