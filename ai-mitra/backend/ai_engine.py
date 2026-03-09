@@ -51,3 +51,16 @@ def analyze_text(user_text):
             "explanation": "The AI provided an unreadable response.",
             "verification_tip": "Try analyzing the message again."
         }
+def analyze_text(text):
+
+    keywords = ["sad", "lonely", "depressed", "stress", "anxiety"]
+
+    score = 0
+
+    text = text.lower()
+
+    for word in keywords:
+        if word in text:
+            score += 1
+
+    return score
