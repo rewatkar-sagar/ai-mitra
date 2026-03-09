@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 def calculate_risk(text):
     """
     Temporary placeholder for Member 4.
@@ -7,3 +8,15 @@ def calculate_risk(text):
         "rule_based_risk": "Pending",
         "flagged_words": []
     }
+=======
+def calculate_risk(score):
+
+    if score == 0:
+        return "Low"
+
+    elif score <= 2:
+        return "Medium"
+
+    else:
+        return "High"
+>>>>>>> 441a793c5370f208524248f6d619bec890753051
