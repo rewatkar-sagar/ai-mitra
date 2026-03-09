@@ -1,8 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+<meta charset="UTF-8">
 <title>AI Mitra</title>
-<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+background:#f5f7fb;
+margin:0;
+padding:0;
+}
+
+.container{
+max-width:700px;
+margin:80px auto;
+background:white;
+padding:40px;
+border-radius:10px;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+h1{
+margin-bottom:5px;
+}
+
+.subtitle{
+color:#666;
+margin-bottom:25px;
+}
+
+textarea{
+width:100%;
+height:120px;
+padding:12px;
+border:1px solid #ddd;
+border-radius:6px;
+font-size:14px;
+resize:none;
+}
+
+.buttons{
+margin-top:15px;
+}
+
+button{
+background:#2d6cdf;
+color:white;
+border:none;
+padding:10px 18px;
+border-radius:6px;
+margin:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1f4fb5;
+}
+
+.result-card{
+margin-top:30px;
+padding:20px;
+border-radius:6px;
+background:#f7f9fc;
+text-align:left;
+}
+
+.trust-bar{
+width:100%;
+height:10px;
+background:#ddd;
+border-radius:10px;
+margin-top:8px;
+}
+
+#trustFill{
+height:10px;
+width:0%;
+background:#2d6cdf;
+border-radius:10px;
+}
+
+footer{
+text-align:center;
+margin-top:30px;
+color:#777;
+font-size:12px;
+}
+
+</style>
+
 </head>
 
 <body>
@@ -10,33 +100,261 @@
 <div class="container">
 
 <h1>AI Mitra</h1>
+<p class="subtitle">Detect AI scams, misinformation and emotional risk</p>
 
-<p>
-Your AI safety companion that detects scams,
-misinformation, and unreliable AI-generated messages.
-</p>
+<textarea id="textInput" placeholder="Enter message or speak..."></textarea>
 
-<label>Select Language</label>
+<div class="buttons">
 
-<select id="language">
-<option value="en-US">English</option>
-<option value="hi-IN">Hindi</option>
-<option value="mr-IN">Marathi</option>
-</select>
+<button onclick="analyzeText()">Analyze</button>
 
-<br><br>
-
-<button onclick="startAnalysis()">
-Start Message Analysis
-</button>
-
-<br><br>
-
-<a href="course.html">Learn AI Safety</a>
+<button onclick="startVoiceInput()">🎤 Speak</button>
 
 </div>
 
-<script src="js/main.js"></script>
+<div class="result-card">
+
+<p>Fraud Risk: <span id="fraud">-</span></p>
+
+<p>Risk Level: <span id="risk">-</span></p>
+
+<p>AI Trust Meter: <span id="trust">0%</span></p>
+
+<div class="trust-bar">
+<div id="trustFill"></div>
+</div>
+
+</div>
+
+</div>
+
+<footer>
+AI Safety Project Demo
+</footer>
+
+<script src="main.js"></script>
+<script src="voice.js"></script>
+
+/* Reset */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Segoe UI",sans-serif;
+}
+
+/* Background */
+
+body{
+
+background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+
+min-height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+color:#333;
+
+}
+
+/* Main Card */
+
+.container{
+
+width:750px;
+
+background:white;
+
+padding:40px;
+
+border-radius:12px;
+
+box-shadow:0 15px 40px rgba(0,0,0,0.25);
+
+}
+
+/* Title */
+
+h1{
+
+text-align:center;
+
+font-size:32px;
+
+margin-bottom:8px;
+
+color:#1c2b36;
+
+}
+
+.subtitle{
+
+text-align:center;
+
+color:#6b7c93;
+
+margin-bottom:30px;
+
+}
+
+/* Textarea */
+
+textarea{
+
+width:100%;
+
+height:120px;
+
+padding:14px;
+
+border:1px solid #dce3ec;
+
+border-radius:8px;
+
+font-size:14px;
+
+resize:none;
+
+transition:0.3s;
+
+}
+
+textarea:focus{
+
+border-color:#4f8df5;
+
+box-shadow:0 0 5px rgba(79,141,245,0.3);
+
+outline:none;
+
+}
+
+/* Buttons */
+
+.buttons{
+
+text-align:center;
+
+margin-top:20px;
+
+}
+
+button{
+
+padding:12px 22px;
+
+margin:6px;
+
+border:none;
+
+border-radius:8px;
+
+font-size:14px;
+
+cursor:pointer;
+
+background:#4f8df5;
+
+color:white;
+
+transition:0.3s;
+
+}
+
+button:hover{
+
+background:#2f6fe0;
+
+transform:translateY(-1px);
+
+box-shadow:0 6px 15px rgba(0,0,0,0.15);
+
+}
+
+/* Result Section */
+
+.result-card{
+
+margin-top:30px;
+
+padding:25px;
+
+background:#f8fbff;
+
+border-radius:10px;
+
+border:1px solid #e2e8f0;
+
+}
+
+/* Result Text */
+
+.result-card p{
+
+font-size:15px;
+
+margin:10px 0;
+
+}
+
+/* Highlight values */
+
+.result-card span{
+
+font-weight:600;
+
+color:#2c3e50;
+
+}
+
+/* Trust Meter */
+
+.trust-bar{
+
+width:100%;
+
+height:12px;
+
+background:#e2e8f0;
+
+border-radius:10px;
+
+margin-top:8px;
+
+overflow:hidden;
+
+}
+
+#trustFill{
+
+height:100%;
+
+width:0%;
+
+background:linear-gradient(90deg,#34d399,#3b82f6);
+
+transition:width 0.6s ease;
+
+}
+
+/* Footer */
+
+footer{
+
+text-align:center;
+
+margin-top:20px;
+
+color:#9aa5b1;
+
+font-size:12px;
+
+}
 
 </body>
 </html>
