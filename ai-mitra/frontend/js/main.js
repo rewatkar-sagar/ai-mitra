@@ -1,10 +1,30 @@
-function startAnalysis(){
+async function analyzeText(){
 
-const lang =
-document.getElementById("language").value;
+const text = document.getElementById("textInput").value
 
-localStorage.setItem("lang",lang);
+if(!text){
+alert("Please enter or speak a message")
+return
+}
 
-window.location.href="ask.html";
+const response = await fetch("http://127.0.0.1:5000/analyze",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({text:text})
+
+})
+
+const data = await response.json()
+
+document.getElementById("fraud").innerText = data.fraud_risk
+document.getElementById("risk").innerText = data.risk_level
+document.getElementById("trust").innerText = data.trust_score + "%"
+
+document.getElementById("trustFill").style.width = data.trust_score + "%"
 
 }

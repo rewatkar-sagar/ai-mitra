@@ -1,61 +1,51 @@
 from flask import Flask, request, jsonify
-
-from risk_analyzer import calculate_risk
-from trust_meter import trust_meter
-from fraud_checker import fraud_check
-from quiz_engine import get_quiz
-from certificate import generate_certificate
+from flask_cors import CORS
+from supabase import create_client
 
 app = Flask(__name__)
+CORS(app)
+@app.route("/")
+def home():
+    return "AI Mitra Backend Running"
+# Supabase setup
+SUPABASE_URL = "https://sgvxmtodisrztmvoytnv.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNndnhtdG9kaXNyenRtdm95dG52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMTc1ODgsImV4cCI6MjA4ODU5MzU4OH0.n96Q7MVxs1X-HQ5PgYknGJ6cnkagcxxzrnm5P-uPw9U"
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
 
-    data = request.json
-    text = data.get("text")
+    text = request.json.get("text", "")
 
-    if not text:
-        return jsonify({"error": "No text provided"}), 400
-
-    # simple emotion detection
-    if "stress" in text.lower() or "sad" in text.lower():
-        score = 2
+    # Simple fraud detection
+    if "lottery" in text.lower() or "click" in text.lower():
+        fraud_risk = "High"
+        trust_score = 20
     else:
-        score = 0
+        fraud_risk = "Low"
+        trust_score = 90
 
-    risk_level = calculate_risk(score)
+    # Emotional risk detection
+    if "depressed" in text.lower() or "hopeless" in text.lower():
+        risk_level = "High"
+        trust_score = 40
+    else:
+        risk_level = "Low"
 
-    trust_score = trust_meter(text)
-
-    fraud_risk = fraud_check(text)
-
-    result = {
+    # Data to store in database
+    data = {
         "text": text,
+        "fraud_risk": fraud_risk,
         "risk_level": risk_level,
-        "trust_score": trust_score,
-        "fraud_risk": fraud_risk
+        "trust_score": trust_score
     }
 
-    return jsonify(result)
+    # Insert into Supabase
+    supabase.table("analysis_results").insert(data).execute()
 
-
-@app.route("/quiz", methods=["GET"])
-def quiz():
-    return jsonify(get_quiz())
-
-
-@app.route("/certificate", methods=["POST"])
-def certificate():
-
-    data = request.json
-    name = data.get("name")
-
-    cert = generate_certificate(name)
-
-    return jsonify({
-        "certificate": cert
-    })
+    return jsonify(data)
 
 
 if __name__ == "__main__":
