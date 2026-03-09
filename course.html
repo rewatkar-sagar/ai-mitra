@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>AI Safety Lessons</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>AI Safety Lessons</h1>
+
+<div id="lessons"></div>
+
+</div>
+
+<script>
+
+fetch("../data/lessons.json")
+.then(res => res.json())
+.then(data => {
+
+const container = document.getElementById("lessons");
+
+data.forEach(lesson => {
+
+const div = document.createElement("div");
+
+div.innerHTML = `
+<h3>${lesson.title}</h3>
+<p>${lesson.content}</p>
+`;
+
+container.appendChild(div);
+
+});
+
+});
+
+</script>
+
+</body>
+</html>
