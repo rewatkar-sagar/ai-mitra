@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 function startVoiceInput() {
 
     if (!('webkitSpeechRecognition' in window)) {
@@ -33,4 +34,19 @@ function startVoiceInput() {
     recognition.onend = function () {
         console.log("Voice recognition ended.");
     };
+=======
+function speakText(text){
+
+const lang =
+localStorage.getItem("lang") || "en-US";
+
+const speech =
+new SpeechSynthesisUtterance();
+
+speech.text = text;
+speech.lang = lang;
+
+window.speechSynthesis.speak(speech);
+
+>>>>>>> c41ce8a9ce5eda57a152358a3a6158d6b1cc4b4d
 }
