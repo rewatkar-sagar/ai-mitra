@@ -1,53 +1,62 @@
 from flask import Flask, request, jsonify
-from ai_engine import analyze_text
+
 from risk_analyzer import calculate_risk
-from supabase_client import supabase
+from trust_meter import trust_meter
+from fraud_checker import fraud_check
+from quiz_engine import get_quiz
+from certificate import generate_certificate
 
 app = Flask(__name__)
-CORS(app) # Enable Cross-Origin Resource Sharing
-
-@app.route('/api/analyze', methods=['POST'])
-
-@app.route("/")
-def home():
-    return "AI Mitra Backend Running"
 
 
-# -------------------------
-# AI ANALYSIS API
-# -------------------------
 @app.route("/analyze", methods=["POST"])
-
 def analyze():
 
     data = request.json
-    
-    # Handle both 'message' and 'text' keys just in case the frontend changes it
-    if not data:
-        return jsonify({'error': 'No data provided in the request body.'}), 400
-        
-    user_message = data.get('message') or data.get('text')
-    
-    if not user_message:
-        return jsonify({'error': 'No message provided.'}), 400
+    text = data.get("text")
 
-    score = analyze_text(user_text)
-    risk = calculate_risk(score)
+    if not text:
+        return jsonify({"error": "No text provided"}), 400
 
-    # Store result in Supabase
-    supabase.table("user_results").insert({
-        "user_text": user_text,
-        "risk_level": risk
-    }).execute()
+    # simple emotion detection
+    if "stress" in text.lower() or "sad" in text.lower():
+        score = 2
+    else:
+        score = 0
+
+    risk_level = calculate_risk(score)
+
+    trust_score = trust_meter(text)
+
+    fraud_risk = fraud_check(text)
+
+    result = {
+        "text": text,
+        "risk_level": risk_level,
+        "trust_score": trust_score,
+        "fraud_risk": fraud_risk
+    }
+
+    return jsonify(result)
+
+
+@app.route("/quiz", methods=["GET"])
+def quiz():
+    return jsonify(get_quiz())
+
+
+@app.route("/certificate", methods=["POST"])
+def certificate():
+
+    data = request.json
+    name = data.get("name")
+
+    cert = generate_certificate(name)
 
     return jsonify({
-        "score": score,
-        "risk_level": risk
+        "certificate": cert
     })
 
 
-# -------------------------
-# RUN SERVER
-# -------------------------
 if __name__ == "__main__":
     app.run(debug=True)
